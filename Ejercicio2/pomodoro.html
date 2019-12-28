@@ -1,0 +1,49 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="pomodoro.js"></script>
+    <title>Pomodoro</title>
+</head>
+
+<body onload="fullyload()">
+
+<form id="taskform" name="taskform" oninput="tasknumminutes.value=taskminutes.value">
+    Task: <input type="text" id="taskname" name="taskname" autofocus required
+                 placeholder="Write here a description for your next task" size="50">
+    <br> Duration: <input type="range" id="taskminutes" name="taskminutes" min="1" max="25" value="25" required>
+    <output name="tasknumminutes">25</output>
+    minutes<br>
+    <input type="button" id="start" name="start" value="Start!">
+</form>
+
+<form id="breakform" name="breakform" oninput="breaknumminutes.value=breakminutes.value" style="display: none;">
+    Duration: <input type="range" id="breakminutes" name="breakminutes" min="3" max="5" value="5" required>
+    <output name="breaknumminutes">5</output>
+    minutes<br>
+    <input type="button" id="startbreak" name="startbreak" value="Let's break!">
+</form>
+
+<div id="taskcounter" name="taskcounter" style="display: none;">
+    Current task: <span id="tasktext" name="tasktext"></span><br> Remaining time: <span id="realtaskcounter"
+                                                                                        name="realtaskcounter"></span><br>
+    <input type="button" id="back" name="back" value="I deserve a break!" disabled>
+    <p>
+        Prior tasks: </p>
+    <ol id="priortasks" name="priortasks"></ol>
+    <button id="cleartasks" name="cleartasks">Clear Tasks</button>
+</div>
+
+<div id="breakcounter" name="breakcounter" style="display: none;">
+    Remaining time: <span id="realbreakcounter" name="realbreakcounter"></span><br>
+    <input type="button" id="breakback" name="breakback" value="Back to work!" disabled>
+    <p>
+    </p>
+</div>
+
+
+</body>
+
+</html>
