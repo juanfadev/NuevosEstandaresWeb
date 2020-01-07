@@ -5,7 +5,7 @@ const fullyload = () => {
     const taskMinutes = document.getElementById("taskminutes");
     const taskCounter = document.getElementById("taskcounter");
     const breakCounter = document.getElementById("breakcounter");
-    const clearTasks  = document.getElementById("cleartasks");
+    const clearTasks = document.getElementById("cleartasks");
     const taskName = document.getElementById("taskname");
     const counter = document.getElementById("realtaskcounter");
     const currentTask = document.getElementById("tasktext");
@@ -16,15 +16,22 @@ const fullyload = () => {
     const realBreakCounter = document.getElementById("realbreakcounter");
     const breakForm = document.getElementById("breakform");
     let tasks = localStorage.hasOwnProperty("tasks") ? JSON.parse(localStorage.getItem("tasks")) : [];
-    const priorTasks = document.getElementById("priortasks");
-    tasks.forEach(t =>{
-        let li = document.createElement("li");
-        li.appendChild(document.createTextNode(Task.print(t)));
-        priorTasks.appendChild(li);
-    });
-
-    clearTasks.onclick = () =>{
-      localStorage.clear();
+    const parseTasks = () => {
+        const priorTasks = document.getElementById("priortasks");
+        while (priorTasks.firstChild) {
+            priorTasks.removeChild(priorTasks.firstChild);
+        }
+        tasks.forEach(t => {
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(Task.print(t)));
+            priorTasks.appendChild(li);
+        });
+    }
+    parseTasks();
+    clearTasks.onclick = () => {
+        localStorage.clear();
+        tasks = [];
+        parseTasks();
     };
     start.onclick = () => {
         console.log(tasks);
@@ -59,12 +66,13 @@ const fullyload = () => {
             taskCounter.style.display = "none";
             breakCounter.style.display = "block";
             taskForm.style.display = "none";
+            startBreakButton.disabled = false;
         };
         startBreakButton.onclick = () => {
             startBreakButton.disabled = true;
             worker = new Worker('break.js');
             worker.postMessage(breakMinutes.value);
-            worker.onmessage = (e) =>{
+            worker.onmessage = (e) => {
                 let min = ~~(e.data / 60);
                 let sec = e.data - min * 60;
                 console.log(`Quedan ${min}:${sec}`);
@@ -80,42 +88,42 @@ const fullyload = () => {
         }
     };
     const restart = () => {
-        backToWork.disabled= false;
+        backToWork.disabled = false;
         worker.terminate();
-        backToWork.onclick = () =>{
+        backToWork.onclick = () => {
             start.disabled = false;
-            breakCounter.display= "none";
+            breakCounter.display = "none";
             breakForm.style.display = "none";
             taskCounter.style.display = "block";
+            breakCounter.style.display = "none";
             taskForm.style.display = "block";
-            breakButton.disabled =true;
+            breakButton.disabled = true;
             backToWork.disabled = true;
         }
+        parseTasks();
     }
 
 };
 
 class Task {
-    constructor(name, minutes){
+    constructor(name, minutes) {
         this.name = name;
         this.initialMinutes = minutes;
-        this.time = minutes*60;
+        this.time = minutes * 60;
     }
 
-    get minutes(){
+    get minutes() {
         return ~~(this.time / 60);
     }
-    get seconds(){
-        return this.time - this.minutes()*60;
+    get seconds() {
+        return this.time - this.minutes() * 60;
     }
 
-    static print(task){
+    static print(task) {
         return `Tarea ${task.name}, de ${task.initialMinutes} Minutos.`;
     }
 
-    static nextSecond(task){
-        task.time -=1;
+    static nextSecond(task) {
+        task.time -= 1;
     }
 }
-
-
